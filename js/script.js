@@ -22,20 +22,20 @@ var line = d3.svg.line()
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d.unemployment); });
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select(".chart").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.json("js/unemployment_data.json", function(error, data) {
+d3.json("js/data.json", function(error, data) {
   data.forEach(function(d) {
     d.date = parseDate(d.date);
-    d.close = +d.close;
- 
+    d.unemployment = +d.unemployment;
+  });
 
-  x.domain(d3.extent(data.stats, function(d) { return d.date; }));
-  y.domain(d3.extent(data.stats, function(d) { return d.unemployment; }));
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+  y.domain(d3.extent(data, function(d) { return d.unemployment; }));
 
   svg.append("g")
       .attr("class", "x axis")
@@ -53,9 +53,10 @@ d3.json("js/unemployment_data.json", function(error, data) {
       .text("Price ($)");
 
   svg.append("path")
-      .datum(data.stats)
+      .datum(data)
       .attr("class", "line")
       .attr("d", line);
+
 });
 
 
